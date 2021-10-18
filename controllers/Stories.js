@@ -133,3 +133,41 @@ export const updatePlace = async (req, res, next) => {
 
   res.status(200).json({ stories: story.toObject({ getters: true }) });
 };
+export const updateViews = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422)
+    );
+  }
+
+  const { views } = req.body;
+  const placeId = req.params.uid;
+  console.log(placeId);
+  console.log(views);
+  let story;
+  console.log();
+  try {
+    story = await Stories.findById(placeId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not update place.",
+      500
+    );
+    return next(error);
+  }
+
+  story.views = views + 1;
+
+  try {
+    await story.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not update place.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(200).json({ stories: story.toObject({ getters: true }) });
+};

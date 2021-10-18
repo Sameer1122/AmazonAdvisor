@@ -5,6 +5,7 @@ import { getAllStories } from "../controllers/Stories.js";
 import { deletePlace } from "../controllers/Stories.js";
 import { updatePlace } from "../controllers/Stories.js";
 import { fileUpload } from "../middleware/file-upload.js";
+import { updateViews } from "../controllers/Stories.js";
 const router = express.Router();
 router.get("/", getAllStories);
 router.patch(
@@ -13,6 +14,7 @@ router.patch(
   [check("title").not().isEmpty(), check("description").not().isEmpty()],
   updatePlace
 );
+router.patch("/update/:uid", updateViews);
 router.post(
   "/",
   fileUpload.single("img"),
